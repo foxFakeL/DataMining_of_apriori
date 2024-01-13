@@ -6,7 +6,6 @@ enable_testing()
 
 
 add_executable(demo main.cpp ItemSet.cpp ItemSet.h)
-add_executable(dTest test.cpp ItemSet.cpp ItemSet.h)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

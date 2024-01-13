@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/demo.dir/main.cpp.o CMakeFiles/demo.dir/ItemSet.cpp.o  -o demo 

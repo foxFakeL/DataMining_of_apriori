@@ -1,9 +1,7 @@
-#include <algorithm>
 #include <cmath>
 #include <ctime>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <set>
 #include <sstream>
 #include <string>
@@ -23,7 +21,8 @@ double minSupportDec = 0.01;
 int minSupport = 0;
 
 // 从k-1频繁项集生成k候选项集
-OrderedArray<ItemSet> generateCandidate(OrderedArray<ItemSet>& frequentItemSet_k_1) {
+OrderedArray<ItemSet>
+generateCandidate(OrderedArray<ItemSet> &frequentItemSet_k_1) {
     OrderedArray<ItemSet> candidateItemSet_k;
     for (int i = 0; i < frequentItemSet_k_1.size(); i++) {
         for (int j = i + 1; j < frequentItemSet_k_1.size(); j++) {
@@ -60,18 +59,21 @@ OrderedArray<ItemSet> generateCandidate(OrderedArray<ItemSet>& frequentItemSet_k
     return candidateItemSet_k;
 }
 // 递归求出所有的频繁项集
-void apriori(OrderedArray<ItemSet>& frequentItemSet_k_1, vector<ItemSet>& itemData, int k, fstream& fout, int time) {
+void apriori(OrderedArray<ItemSet> &frequentItemSet_k_1,
+             vector<ItemSet> &itemData, int k, fstream &fout, int time) {
     // 由k-1频繁项集生成k候选项集
-    OrderedArray<ItemSet> candidateItemSet_k = generateCandidate(frequentItemSet_k_1);
+    OrderedArray<ItemSet> candidateItemSet_k =
+        generateCandidate(frequentItemSet_k_1);
     if (candidateItemSet_k.size() == 0) {
         return;
     }
-    cout << "candidateItemSet_" << k << " total number = " << candidateItemSet_k.size() << endl;
+    cout << "candidateItemSet_" << k
+         << " total number = " << candidateItemSet_k.size() << endl;
     // 遍历所有的记录，统计候选项集的支持度
     OrderedArray<ItemSet> frequentItemSet_k;
     int cnt = 0;
     for (int i = 0; i < candidateItemSet_k.size(); i++) {
-        for (const auto& j : itemData) {
+        for (const auto &j : itemData) {
             if (candidateItemSet_k[i].isSubset(j)) {
                 candidateItemSet_k[i].support++;
             }
@@ -83,11 +85,13 @@ void apriori(OrderedArray<ItemSet>& frequentItemSet_k_1, vector<ItemSet>& itemDa
     if (frequentItemSet_k.size() == 0) {
         return;
     }
-    fout << "frequentItemSet_" << k << " total number = " << frequentItemSet_k.size() << endl;
+    fout << "frequentItemSet_" << k
+         << " total number = " << frequentItemSet_k.size() << endl;
     for (int i = 0; i < frequentItemSet_k.size(); i++) {
         fout << frequentItemSet_k[i].toString() << endl;
     }
-    cout << "Process frequentItemSet_" << k << " finished! total number : " << frequentItemSet_k.size() << "\n"
+    cout << "Process frequentItemSet_" << k
+         << " finished! total number : " << frequentItemSet_k.size() << "\n"
          << "total time: " << (clock() - time) / 1000.0 << "s" << endl;
     // 递归求出k+1频繁项集
     apriori(frequentItemSet_k, itemData, k + 1, fout, time);
@@ -116,7 +120,7 @@ int main() {
     cout << "transaction number = " << itemData.size() << endl;
     // 遍历所有的item，找出支持度大于minSupport的1项集
     OrderedArray<ItemSet> frequentItemSet_1;
-    for (const auto& item : itemSetCnt) {
+    for (const auto &item : itemSetCnt) {
         if (item.second >= minSupport) {
             ItemSet itemset(item.second);
             itemset.add(item.first);
@@ -124,12 +128,14 @@ int main() {
         }
     }
     fstream fout("result.txt", ios::out);
-    cout << "Process frequentItemSet_1 finished! total number : " << frequentItemSet_1.size() << endl;
+    cout << "Process frequentItemSet_1 finished! total number : "
+         << frequentItemSet_1.size() << endl;
     cout << "total time :" << (clock() - beginTime) / 1000.0 << "s" << endl;
     fout << "frequentItemSet_1:" << endl;
     for (int i = 0; i < frequentItemSet_1.size(); i++) {
         fout << frequentItemSet_1[i].toString() << endl;
     }
     apriori(frequentItemSet_1, itemData, 2, fout, beginTime);
-    printf("The program takes %lf seconds to run.\n", (double)(clock() - beginTime) / CLOCKS_PER_SEC);
+    printf("The program takes %lf seconds to run.\n",
+           (double)(clock() - beginTime) / CLOCKS_PER_SEC);
 }
